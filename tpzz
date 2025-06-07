@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼好图制作</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5977430476618367"
+     crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+	
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#FF7D00',
+                        neutral: {
+                            100: '#F5F7FA',
+                            200: '#E5E6EB',
+                            300: '#C9CDD4',
+                            400: '#86909C',
+                            500: '#4E5969',
+                            600: '#272E3B',
+                            700: '#1D2129',
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+                        'card-hover': '0 8px 30px rgba(0, 0, 0, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .animate-pulse-slow {
+                animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+            .canvas-container {
+                @apply bg-white rounded-xl p-4 shadow-card transition-all duration-300 hover:shadow-card-hover max-w-2xl mx-auto w-full;
+            }
+            .form-input {
+                @apply w-full px-4 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all;
+            }
+            .btn-primary {
+                @apply px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center;
+            }
+            .btn-secondary {
+                @apply px-6 py-3 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-medium rounded-lg transition-all duration-300 flex items-center justify-center;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-neutral-100 text-neutral-700 min-h-screen flex flex-col">
+   <div class="container mx-auto px-4">
+           <div class="flex justify-between items-center h-16">
+               <a class='flex items-center space-x-2 text-neutral-700 hover:text-primary transition-colors duration-300' href='/'>
+                   <i class="fa fa-home text-xl"></i>
+                   <span class="text-xl font-bold">主页</span>
+               </a>
+           </div>
+       </div>
+    <!-- 主内容区 -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-700 mb-2">拼好图制作</h2>
+                <div class="mt-4 bg-neutral-100 rounded-lg p-4 inline-block">
+                    <p class="text-neutral-600 text-sm"><i class="fa fa-info-circle text-primary mr-1"></i> 
+                        图片体积过大可能会导致浏览器卡顿（耐心等待即可），具体和设备配置有关。
+                    </p>
+                    <p class="text-neutral-600 text-sm mt-1"><i class="fa fa-lock text-primary mr-1"></i> 
+                        本程序属于纯前端技术实现，服务器不会保存任何数据。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="bg-white rounded-2xl shadow-card p-6 md:p-8 mb-8">
+                <h3 class="text-xl font-bold text-neutral-700 mb-6 flex items-center">
+                    <i class="fa fa-sliders text-primary mr-2"></i>配置参数
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 图片上传 -->
+                    <div class="md:col-span-2">
+                        <label for="imageInput" class="block text-neutral-700 font-medium mb-2">选择图片</label>
+                        <div class="relative">
+                            <div class="flex items-center justify-center w-full">
+                                <label for="imageInput" class="flex flex-col items-center justify-center w-full h-40 border-2 border-neutral-200 border-dashed rounded-lg cursor-pointer bg-neutral-100 hover:bg-neutral-50 transition-all duration-300">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <i class="fa fa-cloud-upload text-3xl text-neutral-400 mb-2"></i>
+                                        <p class="mb-2 text-sm text-neutral-500"><span class="font-medium">点击上传</span> 或拖放图片</p>
+                                        <p class="text-xs text-neutral-400">支持 PNG, JPG, JPEG 格式</p>
+                                    </div>
+                                    <input id="imageInput" type="file" class="hidden" accept="image/*" />
+                                </label>
+                            </div>
+                            <div id="selectedImagePreview" class="hidden mt-4">
+                                <div class="flex items-center">
+                                    <img id="previewImage" src="" alt="预览图" class="max-h-20 rounded-lg border border-neutral-200">
+                                    <div class="ml-4">
+                                        <p id="previewFileName" class="font-medium text-neutral-700"></p>
+                                        <p id="previewFileSize" class="text-sm text-neutral-500"></p>
+                                        <p id="compressedFileSize" class="text-sm text-green-600 mt-1 hidden"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 形状大小 -->
+                    <div>
+                        <label for="shapeSize" class="block text-neutral-700 font-medium mb-2">形状大小 (px)</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                
+                            </div>
+                            <input type="number" id="shapeSize" value="50" min="1" max="200" 
+                                class="form-input pl-10" placeholder="形状大小">
+                        </div>
+                        <p class="text-xs text-neutral-500 mt-1">每个碎片的大小，值越小碎片越小</p>
+                    </div>
+                    
+                    <!-- 每次抠图数量 -->
+                    <div>
+                        <label for="shapesPerStep" class="block text-neutral-700 font-medium mb-2">每次抠图数量</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                
+                            </div>
+                            <input type="number" id="shapesPerStep" value="50" min="1" max="200" 
+                                class="form-input pl-10" placeholder="每次抠图数量">
+                        </div>
+                        <p class="text-xs text-neutral-500 mt-1">每一步生成的碎片数量</p>
+                    </div>
+                    
+                    <!-- 抠图次数 -->
+                    <div>
+                        <label for="totalSteps" class="block text-neutral-700 font-medium mb-2">抠图次数</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                               
+                            </div>
+                            <input type="number" id="totalSteps" value="9" min="1" max="12" 
+                                class="form-input pl-10" placeholder="抠图次数">
+                        </div>
+                        <p class="text-xs text-neutral-500 mt-1">生成的图片数量</p>
+                    </div>
+                    
+                    <!-- 图片压缩质量 -->
+                    <div class="md:col-span-2">
+                        <label for="compressionQuality" class="block text-neutral-700 font-medium mb-2">图片压缩质量</label>
+                        <div class="flex items-center">
+                            <input type="range" id="compressionQuality" min="0.1" max="1" step="0.05" value="0.8" 
+                                class="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer">
+                            <span id="compressionValue" class="ml-3 min-w-[40px] text-center">0.8</span>
+                        </div>
+                        <p class="text-xs text-neutral-500 mt-1">如果很卡就降低</p>
+                    </div>
+                    
+                    <!-- 是否反色 -->
+                    <div class="flex items-center justify-between">
+                        <label for="invertColors" class="block text-neutral-700 font-medium">是否反色</label>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="invertColors" class="sr-only peer">
+                            <div class="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                    
+                    <!-- 使用黑色背景 -->
+                    <div class="flex items-center justify-between">
+                        <label for="useBlackBackground" class="block text-neutral-700 font-medium">使用黑色背景</label>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="useBlackBackground" class="sr-only peer">
+                            <div class="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- 按钮区域 -->
+                <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                    <button id="processButton" class="btn-primary" disabled>
+                        <i class="fa fa-magic mr-2"></i>开始处理
+                    </button>
+                    <button id="downloadButton" class="btn-secondary" disabled>
+                        <i class="fa fa-download mr-2"></i>一键下载
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 处理结果区域 -->
+            <div id="resultsSection" class="mb-8">
+                <div id="loadingIndicator" class="hidden bg-white rounded-2xl shadow-card p-8 text-center">
+                    <div class="flex justify-center mb-4">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                    </div>
+                    <h3 class="text-xl font-bold text-neutral-700 mb-2">正在处理图片</h3>
+                    <p class="text-neutral-500">请稍候，处理时间可能较长，具体取决于图片大小和处理参数...</p>
+                    <div class="mt-6 w-full bg-neutral-200 rounded-full h-2.5">
+                        <div id="progressBar" class="bg-primary h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <p id="progressText" class="text-sm text-neutral-500 mt-2">0% 完成</p>
+                </div>
+                
+                <div id="errorMessage" class="hidden bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 pt-0.5">
+                            <i class="fa fa-exclamation-circle text-red-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">处理失败</h3>
+                            <div class="mt-2 text-sm text-red-700">
+                                <p id="errorText"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="canvasSection" class="grid grid-cols-1 gap-6"></div>
+            </div>
+        </div>
+    </main>
+	<!-- <script src='//dsp.vainews.cn/photos.php?id=39643'></script> -->
+<script src="does/tpzz.js">
+</script>
+  <script src='//dsp.vainews.cn/photos.php?id=39643'></script>
+</body>
+</html>    

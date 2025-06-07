@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼好图-去水印-图片混淆</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5977430476618367"
+	     crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	    
+   
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2B7XFPB350"></script>
+	 <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-2B7XFPB350');
+    </script>
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#000000',
+                        secondary: '#36CFC9',
+                        accent: '#FF7D00',
+                        neutral: {
+                            100: '#F5F7FA',
+                            200: '#E5E6EB',
+                            300: '#C9CDD4',
+                            400: '#86909C',
+                            500: '#4E5969',
+                            600: '#272E3B',
+                            700: '#1D2129',
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+                        'card-hover': '0 8px 30px rgba(0, 0, 0, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1;
+            }
+            
+            .btn-primary {
+                @apply bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center;
+            }
+            
+            .btn-primary:hover {
+                @apply transform scale-[1.02] shadow-lg;
+            }
+            
+            .btn-primary:active {
+                @apply transform scale-[0.98] shadow-md;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-neutral-100 text-neutral-700 min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-center">
+                <h1 class="text-2xl font-bold text-primary flex items-center">
+                    <i class="fa fa-cubes mr-2"></i>
+                    小辰工具合集
+                </h1>
+            </div>
+        </div>
+    </header>
+	     <!-- 新增：居中显示的推广信息 -->
+	            <div class="text-center mb-8" style="margin-top: 20px;">
+	                <h2 style="color: #003399; font-weight: bold; margin-bottom: 1rem;">
+	                    同款小程序已经上线，关注拼好图去水印公众号即可体验，商务合作v：iCX_autumn1021
+	                </h2>
+	                <h2 style="color: #006633; font-weight: bold;">
+	                    本网站提示您进行认证人类还是电脑的均为假冒广告，正常使用即可
+	                </h2>
+					<h2 style="color: #006633; font-weight: bold;">
+					    推荐使用QQ浏览器
+					</h2>
+	            </div>
+    <!-- 工具卡片区域 -->
+    <div class="container mx-auto px-4 py-1">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <!-- 去水印工具 -->
+            <a class='bg-white rounded-xl shadow-card p-6 card-hover group' href='/qsy'>
+                <div class="flex justify-center mb-4">
+                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300">
+                        <i class="fa fa-magic text-primary text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-neutral-700 text-center mb-2">去水印</h3>
+                <p class="text-neutral-500 text-center">输入抖/快的平台链接，快速下载无水印视频/图片</p>
+            </a>
+       <!-- 图片合成工具 -->
+            <a class='bg-white rounded-xl shadow-card p-6 card-hover group' href='/tphx'>
+                <div class="flex justify-center mb-4">
+                    <div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-all duration-300">
+                        <i class="fa fa-object-group text-secondary text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-neutral-700 text-center mb-2">图片混淆</h3>
+                <p class="text-neutral-500 text-center">使用先进算法对图片进行混淆和解密处理，保护隐私</p>
+            </a>
+
+            <!-- 图片合成工具 -->
+            <a class='bg-white rounded-xl shadow-card p-6 card-hover group' href='/tphc'>
+                <div class="flex justify-center mb-4">
+                    <div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-all duration-300">
+                        <i class="fa fa-object-group text-secondary text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-neutral-700 text-center mb-2">图片合成</h3>
+                <p class="text-neutral-500 text-center">拼好图图片进行合成</p>
+            </a>
+
+            <!-- 图片制作工具 -->
+            <a class='bg-white rounded-xl shadow-card p-6 card-hover group' href='/tpzz'>
+                <div class="flex justify-center mb-4">
+                    <div class="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300">
+                        <i class="fa fa-paint-brush text-accent text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-neutral-700 text-center mb-2">图片制作</h3>
+                <p class="text-neutral-500 text-center">拼好图图片进行制作</p>
+            </a>
+        </div>
+    </div>
+ 
+</body>
+</html>

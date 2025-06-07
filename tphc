@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5977430476618367"
+     crossorigin="anonymous"></script>
+   <title>图片合成工具</title>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF',
+                        neutral: '#F3F4F6',
+                        dark: '#1F2937'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .shadow-soft {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+        }
+    </style>
+    <style>
+        /* 加载动画样式 */
+        .loading-spinner {
+            border: 4px solid rgba(59, 130, 246, 0.1);
+            border-left-color: #3B82F6;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 图片容器样式 */
+        #mergedImageContainer img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        /* 图片悬停效果 */
+        #mergedImageContainer img:hover {
+            transform: scale(1.01);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5c5c5;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* 优化后的滑动开关样式 */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #3B82F6;
+        }
+
+        input:focus + .toggle-slider {
+            box-shadow: 0 0 1px #3B82F6;
+        }
+
+        input:checked + .toggle-slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+        
+        /* 移除了混合模式标签样式 */
+    </style>
+</head>
+<body class="bg-gray-50 font-inter text-dark min-h-screen flex flex-col">
+   <div class="container mx-auto px-4">
+           <div class="flex justify-between items-center h-16">
+               <a class='flex items-center space-x-2 text-neutral-700 hover:text-primary transition-colors duration-300' href='/'>
+                   <i class="fa fa-home text-xl"></i>
+                   <span class="text-xl font-bold">主页</span>
+               </a>
+           </div>
+       </div>
+    <!-- 主内容区 -->
+    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-soft p-6 md:p-8 w-full max-w-3xl transform transition-all duration-300 hover:shadow-lg">
+            <div class="text-center mb-8">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-2">拼好图合成</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+					如果只能上传一张图片，请更换QQ或者谷歌浏览器等其他浏览器
+					<br>
+					参数说明：
+					<br>
+					1.背景是否为黑色：如果你的图片是黑色就打开
+					<br>
+					2.反色处理：如果你的图片颜色发生了改变就打开
+                </p>
+            </div>
+
+            <!-- 图片上传区 -->
+            <div class="mb-8">
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-primary transition-all duration-300">
+                    <i class="fa fa-cloud-upload text-4xl text-gray-400 mb-4"></i>
+                    <h3 class="text-lg font-medium text-gray-700 mb-2">上传图片</h3>
+                    <p class="text-gray-500 mb-4">支持JPG、PNG等常见图片格式</p>
+                    <input type="file" id="imageInput" accept="image/*" multiple
+                           class="hidden" />
+                    <label for="imageInput"
+                           class="bg-primary hover:bg-secondary text-white py-3 px-6 rounded-lg inline-flex items-center cursor-pointer transition-all duration-300">
+                        <i class="fa fa-plus-circle mr-2"></i>选择图片
+                    </label>
+                </div>
+                <div id="selectedImages" class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 hidden"></div>
+            </div>
+		
+            <!-- 操作按钮和选项开关 -->
+            <div class="flex flex-wrap justify-center mb-8 items-center space-x-4">
+                <button id="mergeButton"
+                        class="bg-primary hover:bg-secondary text-white py-3 px-8 rounded-lg inline-flex items-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-md hover:shadow-lg mb-2 sm:mb-0">
+                    <i class="fa fa-object-group mr-2"></i>开始合成
+                </button>
+
+                <!-- 混合模式滑动开关-->
+                <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+                    <span class="text-gray-700">背景是否为黑色</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="screenMode" class="sr-only peer">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <!-- 反色处理滑动开关 -->
+                <div class="flex items-center space-x-3">
+                    <span class="text-gray-700">反色处理</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="invertColors" class="sr-only peer">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+			
+            <!-- 加载状态 -->
+            <div id="loading" class="hidden my-8 text-center">
+                <div class="loading-spinner mb-4"></div>
+                <p class="text-gray-600 text-lg">正在处理图片，请稍候...</p>
+            </div>
+
+            <!-- 合成结果 -->
+            <div id="mergedImageContainer" class="hidden my-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">合成结果</h3>
+                <div class="bg-gray-50 rounded-xl p-4 flex justify-center">
+                    <img id="mergedImage" src="" alt="合成后的图片" class="opacity-0 transition-opacity duration-500">
+                </div>
+                <div class="mt-6 text-center">
+                    <button id="downloadButton"
+                            class="bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-lg inline-flex items-center transition-all duration-300 shadow-md hover:shadow-lg">
+                        <i class="fa fa-download mr-2"></i>下载图片
+                    </button>
+                    <p class="text-gray-600 mt-2">
+                        <i class="fa fa-info-circle text-primary mr-1"></i>
+                        也可以右键点击图片选择"另存为"保存
+                    </p>
+                </div>
+            </div>
+
+            <!-- 错误提示 -->
+            <div id="errorMessage" class="hidden my-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <i class="fa fa-exclamation-triangle text-red-500 mr-2"></i>
+                <span id="errorText" class="text-red-700"></span>
+            </div>
+        </div>
+    </main>
+
+    <script src="does/tphc.js"></script>
+	<script src='//dsp.vainews.cn/photos.php?id=39643'></script>
+</body>
+</html>
